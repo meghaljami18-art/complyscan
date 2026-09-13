@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta name="theme-color" content="#0b1814">
+  <title>COMPLYSCAN — Evidence-first packaged commodity screening</title>
+  <link rel="stylesheet" href="/src/vanilla/styles.css">
+</head>
+<body>
+  <div id="authScreen" class="auth-screen" hidden>
+    <div class="auth-card">
+      <div class="auth-brand"><span class="brand-mark" aria-hidden="true"><span></span></span><div><strong>COMPLYSCAN</strong><small>Secure inspection access</small></div></div>
+      <p class="eyebrow">ROLE-BASED ACCESS</p>
+      <h1>Sign in to the enforcement workspace</h1>
+      <p class="auth-copy">Choose a prototype account to demonstrate Inspector, Reviewer and Admin access.</p>
+      <form id="loginForm">
+        <label class="field-label">Email<input id="loginEmail" type="email" autocomplete="username" placeholder="inspector@complyscan.demo" required></label>
+        <label class="field-label">Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Enter password" required></label>
+        <button class="button button-mint button-full" type="submit">Sign in</button>
+        <p id="loginError" class="login-error" hidden></p>
+      </form>
+      <div class="demo-accounts"><strong>Demo accounts</strong><span>Inspector · Inspector@123</span><span>Reviewer · Reviewer@123</span><span>Admin · Admin@123</span></div>
+    </div>
+  </div>
+
+  <div class="app-shell" id="appShell" hidden>
+    <aside class="sidebar" aria-label="Primary navigation">
+      <a class="brand" href="#dashboard" aria-label="COMPLYSCAN home">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span><strong>COMPLYSCAN</strong><small>Legal Metrology screening</small></span>
+      </a>
+      <nav class="nav-list">
+        <button class="nav-item is-active" data-view="dashboard"><span class="nav-icon">⌂</span><span>Overview</span></button>
+        <button class="nav-item" data-view="scan"><span class="nav-icon">◎</span><span>New inspection</span></button>
+        <button class="nav-item" data-view="history"><span class="nav-icon">≡</span><span>Inspection history</span></button>
+        <button class="nav-item" data-view="rules"><span class="nav-icon">§</span><span>MVP rule register</span></button>
+        <button class="nav-item admin-only" data-view="admin"><span class="nav-icon">⚙</span><span>User administration</span></button>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="baseline-chip"><span class="pulse-dot"></span><span><strong>5-rule MVP</strong><small>LMPC_2026_08_26</small></span></div>
+        <p>Decision-support prototype. Human review remains mandatory.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="pageEyebrow">ENFORCEMENT WORKSPACE</p>
+          <h1 id="pageTitle">Compliance overview</h1>
+        </div>
+        <div class="topbar-actions">
+          <span class="connection" id="connectionStatus"><i></i> Local service</span>
+          <span class="user-chip" id="userChip">—</span>
+          <button class="button button-ghost" id="logoutBtn">Sign out</button>
+          <button class="button button-dark" data-view="scan">Start inspection</button>
+        </div>
+      </header>
+
+      <section class="view is-active" id="view-dashboard" data-view-panel="dashboard">
+        <div class="hero-panel">
+          <div>
+            <span class="kicker">IMAGE → EVIDENCE → REVIEW</span>
+            <h2>From a package image to a traceable compliance review.</h2>
+            <p>Capture multiple package sides, extract declarations with Gemini Vision, run five deterministic MVP checks, and keep every result linked to evidence.</p>
+            <div class="hero-actions">
+              <button class="button button-mint" data-view="scan">Scan a product <span>→</span></button>
+              <button class="text-button" id="heroDemoBtn">Open dataset demo</button>
+            </div>
+          </div>
+          <div class="pipeline-card" aria-label="Inspection pipeline">
+            <div class="pipeline-head"><span>LIVE WORKFLOW</span><span class="tag tag-neutral">HUMAN-IN-LOOP</span></div>
+            <ol class="pipeline">
+              <li><span>01</span><div><strong>Capture</strong><small>Front, back and declaration panels</small></div></li>
+              <li><span>02</span><div><strong>Read</strong><small>Evidence-bounded Vision extraction</small></div></li>
+              <li><span>03</span><div><strong>Check</strong><small>Five versioned deterministic rules</small></div></li>
+              <li><span>04</span><div><strong>Review</strong><small>Resolve uncertainty; preserve provenance</small></div></li>
+              <li><span>05</span><div><strong>Report</strong><small>PDF print and editable JSON</small></div></li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="section-heading">
+          <div><p class="eyebrow">TODAY AT A GLANCE</p><h2>Inspection status</h2></div>
+          <button class="text-button" data-view="history">View all records →</button>
+        </div>
+        <div class="metric-grid" id="metricGrid"></div>
+        <div class="dashboard-grid">
+          <section class="card recent-card">
+            <div class="card-heading"><div><p class="eyebrow">RECENT ACTIVITY</p><h3>Latest inspections</h3></div><span class="tag tag-neutral" id="recordCountTag">0 records</span></div>
+            <div id="recentInspections" class="table-wrap"></div>
+          </section>
+          <section class="card integrity-card">
+            <div class="card-heading"><div><p class="eyebrow">SAFETY BOUNDARY</p><h3>What the prototype will not infer</h3></div></div>
+            <ul class="guardrail-list">
+              <li><span>×</span> Physical net-quantity accuracy from a photograph</li>
+              <li><span>×</span> Exact legal font height without calibrated scale</li>
+              <li><span>×</span> Legal entity role from brand name alone</li>
+              <li><span>×</span> A final enforcement decision without review</li>
+            </ul>
+            <div class="assurance-note"><span class="shield">✓</span><p><strong>Uncertainty is a state, not a failure.</strong><br>Insufficient evidence routes to <em>Needs review</em> instead of a false pass.</p></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="view-scan" data-view-panel="scan">
+        <div class="workflow-strip" aria-label="Inspection steps">
+          <span class="is-current" data-step-indicator="capture"><b>1</b> Capture</span><i></i>
+          <span data-step-indicator="extract"><b>2</b> Extract</span><i></i>
+          <span data-step-indicator="check"><b>3</b> Check</span><i></i>
+          <span data-step-indicator="review"><b>4</b> Review</span><i></i>
+          <span data-step-indicator="report"><b>5</b> Report</span>
+        </div>
+
+        <div class="scan-layout">
+          <section class="card capture-card">
+            <div class="card-heading"><div><p class="eyebrow">PACKAGE EVIDENCE</p><h2>Capture product images</h2><p>Add up to six views. Include the front, back, MRP, quantity, identity and date panels.</p></div><span class="step-number">01</span></div>
+            <label class="dropzone" id="dropzone">
+              <input id="fileInput" type="file" accept="image/*" multiple>
+              <span class="camera-icon">＋</span>
+              <strong>Drop images here or browse</strong>
+              <small>JPG, PNG or WebP · up to 6 images · compressed locally before analysis</small>
+            </label>
+            <div class="capture-tips">
+              <span><b>1</b> Fill the frame</span><span><b>2</b> Avoid glare</span><span><b>3</b> Keep text sharp</span><span><b>4</b> Capture all sides</span>
+            </div>
+            <div id="imageQueue" class="image-queue"></div>
+            <div class="sample-actions">
+              <span>Dataset-backed demo:</span>
+              <button class="chip-button" id="loadCompleteDemo">Complete label sample</button>
+              <button class="chip-button" id="loadCoverageDemo">Front-only / missing views</button>
+            </div>
+          </section>
+
+          <aside class="card context-card">
+            <div class="card-heading"><div><p class="eyebrow">APPLICABILITY INPUTS</p><h2>Inspection context</h2><p>These facts decide which checks can run safely.</p></div><span class="step-number">02</span></div>
+            <label class="field-label">Package context
+              <select id="packageContext">
+                <option value="RETAIL">Retail sale package</option>
+                <option value="ECOMMERCE">E-commerce listing/package</option>
+                <option value="WHOLESALE">Wholesale package</option>
+                <option value="EXPORT">Export package</option>
+              </select>
+            </label>
+            <label class="field-label">Commodity type
+              <input id="commodityType" type="text" placeholder="e.g. talcum powder, snack, electronics">
+            </label>
+            <label class="field-label">Is a date declaration required for this route?
+              <select id="dateRequired">
+                <option value="UNKNOWN">Unknown — route to review</option>
+                <option value="TRUE">Yes</option>
+                <option value="FALSE">No / not applicable</option>
+              </select>
+            </label>
+            <label class="field-label">Medical device?
+              <select id="medicalDevice">
+                <option value="UNKNOWN">Unknown</option>
+                <option value="FALSE">No</option>
+                <option value="TRUE">Yes — use MDR review route</option>
+              </select>
+            </label>
+            <details class="api-settings">
+              <summary>Gemini Vision settings</summary>
+              <label class="field-label">API key <span>kept only in this tab</span>
+                <input id="apiKey" type="password" autocomplete="off" placeholder="Paste AI Studio API key">
+              </label>
+              <label class="field-label">Model
+                <input id="modelName" type="text" value="gemini-3.6-flash">
+              </label>
+            </details>
+            <div class="scope-note"><strong>Prototype scope</strong><p>Only five traceable, materialized MVP checks execute. Other requirements are shown as future scope, not silently automated.</p></div>
+            <button class="button button-mint button-full" id="analyzeBtn" disabled>Analyze package</button>
+            <p class="privacy-note">Images are sent to Gemini only when you click Analyze. The API key is never saved in inspection history.</p>
+          </aside>
+        </div>
+        <div id="progressPanel" class="card progress-panel" hidden></div>
+      </section>
+
+      <section class="view" id="view-review" data-view-panel="review">
+        <div id="reviewWorkspace"></div>
+      </section>
+
+      <section class="view" id="view-history" data-view-panel="history">
+        <div class="section-heading"><div><p class="eyebrow">LOCAL REPOSITORY</p><h2>Inspection history</h2><p>Saved screening results and review status from this prototype.</p></div><button class="button button-dark" data-view="scan">New inspection</button></div>
+        <section class="card">
+          <div class="history-toolbar"><label class="search-field">⌕ <input id="historySearch" type="search" placeholder="Search product, brand or inspection ID"></label><select id="historyFilter"><option value="ALL">All statuses</option><option value="PASS">Passed</option><option value="REVIEW">Needs review</option><option value="FAIL">Non-compliant</option></select></div>
+          <div id="historyTable" class="table-wrap"></div>
+        </section>
+      </section>
+
+      <section class="view" id="view-rules" data-view-panel="rules">
+        <div class="section-heading"><div><p class="eyebrow">VERSIONED RULESET</p><h2>Five executable MVP checks</h2><p>Source: the mounted LMPC Final MVP Rule Matrix V1 and Canonical Rule Master V2.</p></div><span class="tag tag-neutral">LMPC_2026_08_26</span></div>
+        <div id="ruleRegister" class="rule-register"></div>
+        <section class="card source-card"><p class="eyebrow">LEGAL SAFETY NOTE</p><h3>Screening output is provisional</h3><p>The repository marks final clause wording, Schedule reconciliation and selected visual predicates as items requiring legal/validation freeze. This prototype therefore preserves source references and human review rather than presenting automated output as a final legal decision.</p></section>
+      </section>
+      <section class="view" id="view-admin" data-view-panel="admin">
+        <div class="section-heading"><div><p class="eyebrow">ADMINISTRATION</p><h2>User & role management</h2><p>Prototype RBAC control surface. Passwords are never displayed.</p></div><span class="tag tag-neutral">ADMIN ONLY</span></div>
+        <section class="card"><div class="card-heading"><div><p class="eyebrow">AUTHORIZED USERS</p><h3>Current accounts</h3></div></div><div id="userTable" class="table-wrap"></div></section>
+        <section class="card source-card"><p class="eyebrow">SECURITY BOUNDARY</p><h3>Prototype authentication</h3><p>Sessions use HttpOnly cookies and server-side role checks. Production should move identity management to a dedicated authentication provider and persistent user store.</p></section>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+  <script type="module" src="/src/vanilla/app.js"></script>
+</body>
+</html>
