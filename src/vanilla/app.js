@@ -353,11 +353,11 @@ function createInspection(extraction, context, source, model, previewSources, im
 }
 
 async function analyzeCurrentFiles() {
-  const apiKey = $('#apiKey').value.trim() || sessionStorage.getItem('complyscan-api-key') || '';
-  if (apiKey) sessionStorage.setItem('complyscan-api-key', apiKey);
-  if (!apiKey && !state.health?.geminiConfigured) {
-    $('details.api-settings').open = true;
-    $('#apiKey').focus();
+  
+  
+  if (!state.health?.geminiConfigured) {
+    
+    
     return toast('Add a Gemini API key, or load a dataset-backed demo.', true);
   }
   if (!state.files.length) return;
@@ -379,7 +379,7 @@ async function analyzeCurrentFiles() {
     for (const item of state.files) images.push(await compressImage(item.file));
     const data = await fetchJson('/api/analyze', {
       method: 'POST',
-      body: JSON.stringify({ images, apiKey, model: $('#modelName').value.trim() || 'gemini-2.5-flash' })
+      body: JSON.stringify({ images })
     });
     setWorkflowStep('check');
     const context = getContext();
@@ -392,10 +392,10 @@ async function analyzeCurrentFiles() {
     toast('Extraction completed. Review evidence before saving.');
   } catch (error) {
     if (error.code === 'API_KEY_INVALID') {
-      sessionStorage.removeItem('complyscan-api-key');
-      $('#apiKey').value = '';
-      $('details.api-settings').open = true;
-      $('#apiKey').focus();
+      
+      
+      
+      
     }
     toast(error.message || 'Analysis failed.', true);
   } finally {
@@ -569,8 +569,8 @@ function bindEvents() {
   $('#heroDemoBtn').addEventListener('click', () => loadDemo('complete'));
   $('#historySearch').addEventListener('input', renderHistory);
   $('#historyFilter').addEventListener('change', renderHistory);
-  $('#apiKey').value = sessionStorage.getItem('complyscan-api-key') || '';
-  $('#apiKey').addEventListener('change', () => sessionStorage.setItem('complyscan-api-key', $('#apiKey').value.trim()));
+  
+  
   $('#reviewWorkspace').addEventListener('click', (event) => {
     if (event.target.closest('#saveInspectionBtn')) saveInspection();
     if (event.target.closest('#exportJsonBtn')) exportJson();
